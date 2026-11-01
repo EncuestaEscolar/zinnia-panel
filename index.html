@@ -156,8 +156,8 @@ button:not(:disabled):active,.presionado{transform:perspective(600px) rotateX(14
 "use strict";
 
 /* ===== Conexión: pegá tus datos según la guía (parte de Administración) ===== */
-const SUPABASE_URL = "https://psacfjwdjoaxgsmqhrqz.supabase.co/rest/v1/";
-const SUPABASE_ANON_KEY = "sb_publishable_uCnHsr4B144xXiSunVtYzw_F_--ZF5-";
+const SUPABASE_URL = "PEGAR_URL_DE_SUPABASE";
+const SUPABASE_ANON_KEY = "PEGAR_CLAVE_ANON_PUBLIC";
 const CONFIG_OK = !SUPABASE_URL.startsWith("PEGAR") && !SUPABASE_ANON_KEY.startsWith("PEGAR");
 const sb = (CONFIG_OK && typeof supabase !== "undefined") ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
@@ -225,7 +225,10 @@ async function subirFoto(archivo) {
   const limpio = archivo.name.toLowerCase().replace(/[^a-z0-9._-]/g, "-");
   const ruta = `${Date.now()}-${limpio}`;
   const { error } = await sb.storage.from("fotos").upload(ruta, archivo, { cacheControl: "3600", upsert: false });
-  if (error) throw error;
+  if (error) {
+    if (/bucket/i.test(error.message || "")) throw new Error("Todavía no existe el lugar para las fotos. En Supabase: Storage → New bucket → nombre fotos → Public. Después volvé a intentar.");
+    throw new Error("No se pudo subir la foto. Si es la primera vez, ejecutá el segundo SQL (guía, parte 10).");
+  }
   return sb.storage.from("fotos").getPublicUrl(ruta).data.publicUrl;
 }
 async function clienteDe(nombre, tel) {
@@ -242,7 +245,15 @@ async function iniciarSesion(f) {
   const d = new FormData(f);
   $("#errLogin").textContent = "";
   const { error } = await sb.auth.signInWithPassword({ email: String(d.get("email") || "").trim(), password: String(d.get("password") || "") });
-  if (error) { $("#errLogin").textContent = "Correo o contraseña incorrectos."; return; }
+  if (error) {
+    const m = String(error.message || "");
+    $("#errLogin").textContent = /not confirmed/i.test(m)
+      ? "Este usuario todavía no está confirmado. En Supabase: Authentication → Users → borralo y creálo de nuevo marcando Auto Confirm User."
+      : /invalid|credentials/i.test(m)
+        ? "Correo o contraseña incorrectos. Revisá que estén escritos igual que en Supabase."
+        : "No pudimos entrar: " + m;
+    return;
+  }
   await entrar();
 }
 async function entrar() {
