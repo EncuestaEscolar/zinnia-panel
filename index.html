@@ -156,8 +156,8 @@ button:not(:disabled):active,.presionado{transform:perspective(600px) rotateX(14
 "use strict";
 
 /* ===== Conexión: pegá tus datos según la guía (parte de Administración) ===== */
-const SUPABASE_URL = "PEGAR_URL_DE_SUPABASE";
-const SUPABASE_ANON_KEY = "PEGAR_CLAVE_ANON_PUBLIC";
+const SUPABASE_URL = "https://psacfjwdjoaxgsmqhrqz.supabase.co/rest/v1/";
+const SUPABASE_ANON_KEY = "sb_publishable_uCnHsr4B144xXiSunVtYzw_F_--ZF5-";
 const CONFIG_OK = !SUPABASE_URL.startsWith("PEGAR") && !SUPABASE_ANON_KEY.startsWith("PEGAR");
 const sb = (CONFIG_OK && typeof supabase !== "undefined") ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
