@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F6F0E6">
+<title>ZINNIA · Administración</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500&display=swap">
+<style>
+:root{--marfil:#F6F0E6;--blanco:#FBF8F2;--beige:#E7DACA;--arena:#C7B297;--negro:#1A1816;--texto:#4D4740;--mute:#8A8176;--linea:rgba(26,24,22,.14);--fondo:#EFE9DF;--ok:#4F6B4A;--warn:#9A6B2F;--err:#8A2A1F;--serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;--sans:"Jost",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--ease:cubic-bezier(.2,.7,.2,1);--ease-out:cubic-bezier(.16,1,.3,1)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;min-height:100vh;background:var(--fondo);color:var(--texto);font:400 15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+h1,h2{font-family:var(--serif);font-weight:500;color:var(--negro);margin:0}
+h1{font-size:clamp(28px,4vw,36px)}
+h2{font-size:24px;margin-bottom:12px}
+p{margin:0}
+input,select,textarea{font:400 15px var(--sans);color:var(--negro);padding:11px 12px;background:#fff;border:1px solid #D9D0C2;border-radius:0;outline:none;width:100%;min-width:0}
+input:focus,select:focus,textarea:focus{border-color:var(--negro)}
+input[type=file]{padding:8px;font-size:13px}
+label{display:grid;gap:6px;font:500 12px var(--sans);letter-spacing:.06em;color:var(--negro)}
+label.check{display:flex;align-items:center;gap:8px;font-weight:400;letter-spacing:0}
+label.check input{width:auto}
+button,.btn,.btn-mini{font:500 12px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--marfil);background:var(--negro);border:1px solid var(--negro);min-height:44px;padding:0 22px;cursor:pointer;box-shadow:0 6px 16px rgba(26,24,22,.16);transition:transform .25s var(--ease),box-shadow .35s var(--ease),background-color .35s var(--ease)}
+.btn-mini{min-height:34px;padding:0 12px;font-size:11px}
+button.peligro,.btn-mini.peligro{background:var(--err);border-color:var(--err)}
+button:hover{box-shadow:0 12px 24px rgba(26,24,22,.22)}
+button:disabled{opacity:.4;cursor:default}
+button:not(:disabled):active,.presionado{transform:perspective(600px) rotateX(14deg) translateY(3px) scale(.94)!important;box-shadow:inset 0 4px 10px rgba(0,0,0,.3)!important;transition-duration:.08s!important}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.login-caja{width:100%;max-width:380px;background:var(--blanco);border:1px solid var(--linea);padding:34px 28px;text-align:center;display:grid;gap:16px}
+.campos{display:grid;gap:14px}
+.marca-admin{font:500 22px/1 var(--serif);letter-spacing:.32em;color:var(--marfil);margin-right:-.32em}
+.marca-admin small{display:block;font:400 10px var(--sans);letter-spacing:.3em;color:var(--mute);margin-top:6px;margin-right:-.3em}
+.admin{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+.lateral{background:var(--negro);padding:24px 16px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh}
+.lateral .marca-admin{text-align:center;color:var(--marfil)}
+#menu{display:grid;gap:4px}
+#menu button{background:transparent;border:0;box-shadow:none;color:rgba(246,240,230,.75);text-align:left;letter-spacing:.06em;text-transform:none;font:400 15px var(--sans);min-height:42px;padding:0 12px}
+#menu button:hover{box-shadow:none;color:var(--marfil)}
+#menu button.activo{background:rgba(246,240,230,.12);color:var(--marfil)}
+.lateral .salir{margin-top:auto;background:transparent;border:1px solid rgba(246,240,230,.3);box-shadow:none}
+.vista{padding:24px;width:100%;max-width:1080px}
+.cab{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.sub,.muted{color:var(--mute);font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(min-width:900px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.stat{background:var(--blanco);border:1px solid var(--linea);padding:18px}
+.stat span{font-size:11px;letter-spacing:.08em;color:var(--mute);text-transform:uppercase}
+.stat strong{display:block;font:500 28px/1.1 var(--serif);color:var(--negro);margin-top:8px}
+.bloque{background:var(--blanco);border:1px solid var(--linea);padding:20px;margin-top:18px}
+.barra{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.barra input{width:auto;min-width:150px}
+.barra input[type=search]{flex:1 1 220px}
+.buscador{max-width:420px;margin-bottom:12px}
+.turnos,.tarjetas-admin,.lista-simple{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.turno{display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px;background:#fff;border:1px solid var(--linea);padding:12px}
+.turno.cancelado{opacity:.6}
+.t-hora{font:500 24px/1 var(--serif);color:var(--negro)}
+.t-info{display:grid;gap:2px;min-width:0}
+.t-info span{font-size:13px;color:var(--mute);word-break:break-word}
+.t-info em{font-size:13px;color:var(--texto)}
+.t-acc{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.botones{display:flex;flex-wrap:wrap;gap:6px}
+.chip-estado{font:500 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border:1px solid;white-space:nowrap}
+.chip-estado.pendiente{color:var(--warn);border-color:var(--warn)}
+.chip-estado.confirmado{color:var(--ok);border-color:var(--ok)}
+.chip-estado.realizado{color:var(--mute);border-color:var(--mute)}
+.chip-estado.cancelado{color:var(--err);border-color:var(--err)}
+.item{display:grid;grid-template-columns:80px minmax(0,1fr) auto;gap:12px;align-items:center;background:#fff;border:1px solid var(--linea);padding:10px}
+.item.inactivo{opacity:.6}
+.item-foto{width:80px;height:80px;background:var(--beige);display:grid;place-items:center;font-size:11px;color:var(--mute);overflow:hidden}
+.item-foto img{width:100%;height:100%;object-fit:cover}
+.item-info{display:grid;gap:2px;min-width:0}
+.item-info span{font-size:13px;color:var(--mute)}
+.item-info em{font-size:13px;color:var(--warn)}
+.item-acc{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.fila-dia{display:grid;grid-template-columns:1.3fr repeat(4,1fr);gap:10px;align-items:end;padding:10px 0;border-bottom:1px solid var(--linea)}
+.fila-dia label.check{align-self:center}
+.fila-form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:14px}
+.fila-form label{flex:1 1 150px}
+.fila2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lista-simple li{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--linea);background:transparent;box-shadow:none}
+.galeria-admin{list-style:none;padding:0;margin:14px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.galeria-admin li{background:#fff;border:1px solid var(--linea);padding:8px;display:grid;gap:8px;font-size:13px}
+.galeria-admin img{width:100%;aspect-ratio:4/5;object-fit:cover;background:var(--beige)}
+.modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px}
+.m-fondo{position:absolute;inset:0;background:rgba(26,24,22,.45)}
+.m-caja{position:relative;background:var(--blanco);width:100%;max-width:580px;max-height:90vh;overflow:auto;border:1px solid var(--linea);padding:22px}
+.m-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.m-x{min-height:36px;width:36px;padding:0;font-size:22px;line-height:1}
+.aviso{position:fixed;left:50%;bottom:20px;transform:translate(-50%,200%);background:var(--negro);color:var(--marfil);padding:12px 18px;z-index:60;transition:transform .45s var(--ease-out);max-width:92vw;text-align:center;font-size:14px}
+.aviso.on{transform:translate(-50%,0)}
+.aviso.error{background:var(--err)}
+.vacio{color:var(--mute);padding:12px 0}
+.err{color:var(--err);font-size:14px;min-height:18px}
+.cargando{color:var(--mute);padding:20px 0}
+@media(max-width:820px){
+  .admin{grid-template-columns:1fr}
+  .lateral{position:sticky;top:0;z-index:5;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px;padding:12px 14px}
+  .lateral .marca-admin{text-align:left}
+  #menu{display:flex;overflow-x:auto;gap:4px;width:100%}
+  #menu button{white-space:nowrap}
+  .lateral .salir{margin:0 0 0 auto;min-height:34px}
+  .vista{padding:16px}
+  .fila-dia{grid-template-columns:1fr 1fr}
+  .fila-dia label.check{grid-column:1/-1}
+  .item{grid-template-columns:64px minmax(0,1fr)}
+  .item-foto{width:64px;height:64px}
+  .item-acc{grid-column:1/-1;justify-content:flex-start}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<section id="pantalla-login" class="login" hidden>
+  <div class="login-caja">
+    <div class="marca-admin">ZINNIA<small>Administración</small></div>
+    <h1>Entrar</h1>
+    <form id="formLogin" class="campos" novalidate>
+      <label>Correo<input name="email" type="email" autocomplete="username" required></label>
+      <label>Contraseña<input name="password" type="password" autocomplete="current-password" required></label>
+      <p id="errLogin" class="err" role="alert"></p>
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+</section>
+
+<div id="pantalla-app" class="admin" hidden>
+  <aside class="lateral">
+    <div class="marca-admin">ZINNIA<small>Administración</small></div>
+    <nav id="menu">
+      <button data-vista="inicio" class="activo">Inicio</button>
+      <button data-vista="turnos">Turnos</button>
+      <button data-vista="servicios">Servicios</button>
+      <button data-vista="disponibilidad">Disponibilidad</button>
+      <button data-vista="clientes">Clientes</button>
+      <button data-vista="galeria">Galería</button>
+      <button data-vista="configuracion">Configuración</button>
+    </nav>
+    <button class="salir" data-act="salir">Cerrar sesión</button>
+  </aside>
+  <main id="vista" class="vista"></main>
+</div>
+
+<div id="modal" class="modal" hidden></div>
+<div id="aviso" class="aviso" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(() => {
+"use strict";
+
+/* ===== Conexión: pegá tus datos según la guía (parte de Administración) ===== */
+const SUPABASE_URL = "https://psacfjwdjoaxgsmqhrqz.supabase.co/rest/v1/";
+const SUPABASE_ANON_KEY = "sb_publishable_uCnHsr4B144xXiSunVtYzw_F_--ZF5-";
+const CONFIG_OK = !SUPABASE_URL.startsWith("PEGAR") && !SUPABASE_ANON_KEY.startsWith("PEGAR");
+const sb = (CONFIG_OK && typeof supabase !== "undefined") ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+/* ===== Constantes y utilidades ===== */
+const TURNO_SEL = "*, clientes(nombre,telefono), servicios(nombre)";
+const DIAS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const ORDEN = [1, 2, 3, 4, 5, 6, 0];
+const ESTADOS = { pendiente: "Pendiente", confirmado: "Confirmado", realizado: "Realizado", cancelado: "Cancelado" };
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const p2 = n => String(n).padStart(2, "0");
+const iso = d => `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`;
+const hoyISO = () => iso(new Date());
+const sumar = (f, n) => { const [y, m, d] = f.split("-").map(Number); return iso(new Date(y, m - 1, d + n)); };
+const inicioMes = f => f.slice(0, 8) + "01";
+const finMes = f => { const [y, m] = f.split("-").map(Number); return iso(new Date(y, m, 0)); };
+const hhmm = t => String(t ?? "").slice(0, 5);
+const tsLocal = (f, hm, mins = 0) => { const [y, m, d] = f.split("-").map(Number); const [h, mi] = hm.split(":").map(Number); const x = new Date(y, m - 1, d, h, mi + mins); return `${iso(x)}T${p2(x.getHours())}:${p2(x.getMinutes())}:00`; };
+const normTel = s => String(s ?? "").replace(/\D/g, "");
+const dinero = n => "$ " + Number(n || 0).toLocaleString("es-AR");
+const fmtPrecio = p => Number(p) > 0 ? dinero(p) : "Sin precio";
+const fmtDur = m => { const h = Math.floor(m / 60), r = m % 60; return h && r ? `${h} h ${r} min` : h ? `${h} h` : `${r} min`; };
+const fmtFecha = f => { const [y, m, d] = f.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" }); };
+const chip = e => `<span class="chip-estado ${e}">${ESTADOS[e] || e}</span>`;
+const S = { vista: "inicio", fecha: hoyISO(), buscar: "", buscarCli: "", servicios: [], clientes: [], statsCli: {}, turnosDia: [], margen: 10, paso: 30 };
+
+function aviso(msg, tipo = "ok") {
+  const el = $("#aviso");
+  el.textContent = msg; el.className = "aviso on " + (tipo === "error" ? "error" : "");
+  clearTimeout(aviso.t); aviso.t = setTimeout(() => el.classList.remove("on"), 3800);
+}
+function mensajeError(e) {
+  const m = (e && e.message) || "Algo salió mal. Probá de nuevo.";
+  if (/exclusion|turnos_sin_superposicion/i.test(m)) return "Ese horario se superpone con otro turno.";
+  if (/row-level security|permission denied/i.test(m)) return "Tu cuenta no tiene permiso para esta acción.";
+  return m;
+}
+function abrirModal(titulo, cuerpo) {
+  const m = $("#modal");
+  m.innerHTML = `<div class="m-fondo" data-cerrar></div><div class="m-caja" role="dialog" aria-modal="true" aria-label="${esc(titulo)}">
+    <div class="m-top"><h2>${esc(titulo)}</h2><button class="m-x" data-cerrar aria-label="Cerrar">×</button></div>
+    ${cuerpo}</div>`;
+  m.hidden = false;
+}
+function cerrarModal() { const m = $("#modal"); m.hidden = true; m.innerHTML = ""; }
+function ocupado(form, on) { form.querySelectorAll("button[type=submit]").forEach(b => { b.disabled = on; }); }
+function mostrarLogin() { $("#pantalla-login").hidden = false; $("#pantalla-app").hidden = true; }
+function mostrarApp() { $("#pantalla-login").hidden = true; $("#pantalla-app").hidden = false; }
+
+/* ===== Datos compartidos ===== */
+async function cargarServicios() {
+  const { data, error } = await sb.from("servicios").select("*").order("orden").order("nombre");
+  if (error) throw error;
+  S.servicios = data || [];
+}
+async function cargarAjustes() {
+  await cargarServicios();
+  const { data, error } = await sb.from("config").select("clave,valor");
+  if (error) throw error;
+  const c = Object.fromEntries((data || []).map(x => [x.clave, x.valor]));
+  S.margen = Number(c.margen_min) || 10;
+  S.paso = Number(c.paso_min) || 30;
+}
+async function subirFoto(archivo) {
+  const limpio = archivo.name.toLowerCase().replace(/[^a-z0-9._-]/g, "-");
+  const ruta = `${Date.now()}-${limpio}`;
+  const { error } = await sb.storage.from("fotos").upload(ruta, archivo, { cacheControl: "3600", upsert: false });
+  if (error) throw error;
+  return sb.storage.from("fotos").getPublicUrl(ruta).data.publicUrl;
+}
+async function clienteDe(nombre, tel) {
+  const { data, error: e1 } = await sb.from("clientes").select("id").eq("telefono", tel).maybeSingle();
+  if (e1) throw e1;
+  if (data) return data.id;
+  const { data: nuevo, error } = await sb.from("clientes").insert({ nombre, telefono: tel }).select("id").single();
+  if (error) throw error;
+  return nuevo.id;
+}
+
+/* ===== Acceso ===== */
+async function iniciarSesion(f) {
+  const d = new FormData(f);
+  $("#errLogin").textContent = "";
+  const { error } = await sb.auth.signInWithPassword({ email: String(d.get("email") || "").trim(), password: String(d.get("password") || "") });
+  if (error) { $("#errLogin").textContent = "Correo o contraseña incorrectos."; return; }
+  await entrar();
+}
+async function entrar() {
+  const { data, error } = await sb.from("admins").select("user_id").maybeSingle();
+  if (error || !data) {
+    await sb.auth.signOut();
+    mostrarLogin();
+    $("#errLogin").textContent = "Esta cuenta no tiene permiso de administración.";
+    return;
+  }
+  await cargarAjustes();
+  mostrarApp();
+  irA(S.vista);
+}
+
+/* ===== Vistas ===== */
+const stat = (l, v) => `<div class="stat"><span>${esc(l)}</span><strong>${v}</strong></div>`;
+const listaTurnosSimple = rows => rows && rows.length ? `<ul class="turnos">${rows.map(filaTurno).join("")}</ul>` : `<p class="vacio">No hay turnos.</p>`;
+
+async function vInicio() {
+  const hoy = hoyISO(), ini = inicioMes(hoy), fin = finMes(hoy);
+  const [hoyR, prox, pend, canc, mes] = await Promise.all([
+    sb.from("turnos").select(TURNO_SEL).eq("fecha", hoy).order("hora"),
+    sb.from("turnos").select(TURNO_SEL).gt("fecha", hoy).lte("fecha", sumar(hoy, 7)).order("fecha").order("hora"),
+    sb.from("turnos").select("id", { count: "exact", head: true }).eq("estado", "pendiente").gte("fecha", hoy),
+    sb.from("turnos").select("id", { count: "exact", head: true }).eq("estado", "cancelado").gte("fecha", ini).lte("fecha", fin),
+    sb.from("turnos").select("precio").gte("fecha", ini).lte("fecha", fin).neq("estado", "cancelado")
+  ]);
+  for (const r of [hoyR, prox, pend, canc, mes]) if (r.error) throw r.error;
+  const ingresos = (mes.data || []).reduce((a, t) => a + Number(t.precio || 0), 0);
+  const activos = (hoyR.data || []).filter(t => t.estado !== "cancelado").length;
+  return `<header class="cab"><h1>Inicio</h1><p class="sub">${fmtFecha(hoy)}</p></header>
+    <div class="stats">
+      ${stat("Turnos de hoy", activos)}
+      ${stat("Pendientes de confirmar", pend.count ?? 0)}
+      ${stat("Cancelados este mes", canc.count ?? 0)}
+      ${stat("Ingresos estimados del mes", dinero(ingresos))}
+    </div>
+    <section class="bloque"><h2>Turnos de hoy</h2>${listaTurnosSimple(hoyR.data)}</section>
+    <section class="bloque"><h2>Próximos 7 días</h2>${listaTurnosSimple(prox.data)}</section>`;
+}
+
+async function vTurnos() {
+  const { data, error } = await sb.from("turnos").select(TURNO_SEL).eq("fecha", S.fecha).order("hora");
+  if (error) throw error;
+  S.turnosDia = data || [];
+  return `<header class="cab"><h1>Turnos</h1></header>
+    <div class="barra">
+      <button class="btn-mini" data-act="dia" data-n="-1">‹ Día anterior</button>
+      <input type="date" id="fechaTurnos" value="${S.fecha}">
+      <button class="btn-mini" data-act="dia" data-n="1">Día siguiente ›</button>
+      <button class="btn-mini" data-act="hoy">Hoy</button>
+      <input type="search" id="buscarTurnos" placeholder="Buscar por nombre o teléfono" value="${esc(S.buscar)}">
+      <button data-act="nuevo">+ Nuevo turno</button>
+    </div>
+    <p class="sub">${fmtFecha(S.fecha)} · ${S.turnosDia.length} turno(s)</p>
+    <ul class="turnos" id="listaTurnos">${listaTurnos()}</ul>`;
+}
+function listaTurnos() {
+  const q = S.buscar.toLowerCase().trim(), qt = normTel(q);
+  const rows = S.turnosDia.filter(t => !q
+    || (t.clientes?.nombre || "").toLowerCase().includes(q)
+    || (qt && normTel(t.clientes?.telefono).includes(qt)));
+  return rows.map(filaTurno).join("") || `<li class="vacio">No hay turnos para mostrar.</li>`;
+}
+function filaTurno(t) {
+  const b = (act, txt, extra = "") => `<button class="btn-mini" data-act="${act}" data-id="${t.id}" ${extra}>${txt}</button>`;
+  let acc = "";
+  if (t.estado === "pendiente") acc += b("estado", "Confirmar", 'data-estado="confirmado"');
+  if (t.estado === "pendiente" || t.estado === "confirmado") acc += b("estado", "Marcar realizado", 'data-estado="realizado"');
+  if (t.estado === "pendiente" || t.estado === "confirmado") acc += b("estado", "Cancelar", 'data-estado="cancelado" class="peligro"');
+  if (t.estado === "cancelado") acc += b("estado", "Reactivar", 'data-estado="pendiente"');
+  acc += b("reprogramar", "Reprogramar") + b("nota", "Nota");
+  return `<li class="turno ${t.estado}">
+    <div class="t-hora">${hhmm(t.hora)}</div>
+    <div class="t-info"><strong>${esc(t.clientes?.nombre || "—")}</strong>
+      <span>${esc(t.clientes?.telefono || "")} · ${esc(t.servicios?.nombre || "")} · ${fmtPrecio(t.precio)}</span>
+      ${t.observaciones ? `<em>Nota: ${esc(t.observaciones)}</em>` : ""}</div>
+    <div class="t-acc">${chip(t.estado)}<div class="botones">${acc}</div></div></li>`;
+}
+
+async function vServicios() {
+  await cargarServicios();
+  return `<header class="cab"><h1>Servicios y precios</h1><button data-act="nuevoServicio">+ Nuevo servicio</button></header>
+    <ul class="tarjetas-admin">${S.servicios.map(s => `<li class="item ${s.activo ? "" : "inactivo"}">
+      <div class="item-foto">${s.foto_url ? `<img src="${esc(s.foto_url)}" alt="">` : "Sin foto"}</div>
+      <div class="item-info"><strong>${esc(s.nombre)}</strong>
+        <span>${esc(s.categoria)} · ${fmtDur(s.duracion_min)} · ${fmtPrecio(s.precio)}</span>
+        ${s.activo ? "" : "<em>Oculto en la web</em>"}</div>
+      <div class="item-acc">
+        <button class="btn-mini" data-act="editarServicio" data-id="${s.id}">Editar</button>
+        <button class="btn-mini" data-act="toggleServicio" data-id="${s.id}" data-activo="${s.activo ? 0 : 1}">${s.activo ? "Ocultar" : "Mostrar"}</button>
+        <button class="btn-mini peligro" data-act="borrarServicio" data-id="${s.id}">Eliminar</button>
+      </div></li>`).join("") || `<li class="vacio">Todavía no hay servicios.</li>`}</ul>`;
+}
+
+async function vDisponibilidad() {
+  const hoy = hoyISO();
+  const [h, ex, bl] = await Promise.all([
+    sb.from("horarios_semana").select("*"),
+    sb.from("excepciones").select("*").gte("fecha", hoy).order("fecha"),
+    sb.from("bloqueos").select("*").gte("fecha", hoy).order("fecha").order("desde")
+  ]);
+  for (const r of [h, ex, bl]) if (r.error) throw r.error;
+  const porDia = Object.fromEntries((h.data || []).map(x => [x.dia, x]));
+  return `<header class="cab"><h1>Disponibilidad</h1></header>
+    <section class="bloque"><h2>Horario semanal</h2>
+      <form data-form="horarios">
+        ${ORDEN.map(d => { const x = porDia[d] || { trabaja: false };
+          return `<div class="fila-dia">
+            <label class="check"><input type="checkbox" name="trabaja-${d}" ${x.trabaja ? "checked" : ""}> <strong>${DIAS[d]}</strong></label>
+            <label>Abre<input type="time" name="abre-${d}" value="${hhmm(x.abre)}"></label>
+            <label>Cierra<input type="time" name="cierra-${d}" value="${hhmm(x.cierra)}"></label>
+            <label>Pausa desde<input type="time" name="pdesde-${d}" value="${hhmm(x.descanso_desde)}"></label>
+            <label>Pausa hasta<input type="time" name="phasta-${d}" value="${hhmm(x.descanso_hasta)}"></label></div>`; }).join("")}
+        <p class="muted" style="margin:12px 0">Las pausas son opcionales. Si las usás, completá las dos horas.</p>
+        <button type="submit">Guardar horario semanal</button>
+      </form></section>
+
+    <section class="bloque"><h2>Días especiales</h2>
+      <form data-form="excepcion" class="fila-form">
+        <label>Fecha<input type="date" name="fecha" min="${hoy}" required></label>
+        <label>Tipo<select name="cerrado"><option value="1">Cerrado</option><option value="0">Horario especial</option></select></label>
+        <label>Abre<input type="time" name="abre"></label>
+        <label>Cierra<input type="time" name="cierra"></label>
+        <label>Motivo<input name="motivo" maxlength="80" placeholder="Feriado, evento…"></label>
+        <button type="submit">Agregar</button>
+      </form>
+      <ul class="lista-simple">${(ex.data || []).map(x => `<li><strong>${fmtFecha(x.fecha)}</strong>
+        <span>${x.cerrado ? "Cerrado" : `Horario ${hhmm(x.abre)} a ${hhmm(x.cierra)}`}${x.motivo ? " · " + esc(x.motivo) : ""}</span>
+        <button class="btn-mini peligro" data-act="borrarExcepcion" data-id="${x.fecha}">Quitar</button></li>`).join("") || `<li class="vacio">No hay días especiales cargados.</li>`}</ul>
+    </section>
+
+    <section class="bloque"><h2>Bloqueos de horario</h2>
+      <form data-form="bloqueo" class="fila-form">
+        <label>Fecha<input type="date" name="fecha" min="${hoy}" required></label>
+        <label>Desde<input type="time" name="desde" required></label>
+        <label>Hasta<input type="time" name="hasta" required></label>
+        <label>Motivo<input name="motivo" maxlength="80" placeholder="Turno personal, trámite…"></label>
+        <button type="submit">Bloquear</button>
+      </form>
+      <ul class="lista-simple">${(bl.data || []).map(x => `<li><strong>${fmtFecha(x.fecha)}</strong>
+        <span>${hhmm(x.desde)} a ${hhmm(x.hasta)}${x.motivo ? " · " + esc(x.motivo) : ""}</span>
+        <button class="btn-mini peligro" data-act="borrarBloqueo" data-id="${x.id}">Quitar</button></li>`).join("") || `<li class="vacio">No hay bloqueos cargados.</li>`}</ul>
+    </section>`;
+}
+
+async function vClientes() {
+  const [c, t] = await Promise.all([
+    sb.from("clientes").select("*").order("nombre"),
+    sb.from("turnos").select("cliente_id,fecha,estado")
+  ]);
+  if (c.error) throw c.error;
+  if (t.error) throw t.error;
+  const hoy = hoyISO(), stats = {};
+  (t.data || []).forEach(x => {
+    const s = stats[x.cliente_id] || (stats[x.cliente_id] = { n: 0, ult: "" });
+    if (x.estado !== "cancelado") { s.n++; if (x.fecha <= hoy && x.fecha > s.ult) s.ult = x.fecha; }
+  });
+  S.clientes = c.data || [];
+  S.statsCli = stats;
+  return `<header class="cab"><h1>Clientes</h1></header>
+    <input type="search" id="buscarClientes" class="buscador" placeholder="Buscar por nombre o teléfono" value="${esc(S.buscarCli)}">
+    <ul class="tarjetas-admin" id="listaClientes">${listaClientes()}</ul>`;
+}
+function listaClientes() {
+  const q = S.buscarCli.toLowerCase().trim(), qt = normTel(q);
+  const rows = S.clientes.filter(c => !q || c.nombre.toLowerCase().includes(q) || (qt && normTel(c.telefono).includes(qt)));
+  return rows.map(c => { const s = S.statsCli[c.id] || { n: 0, ult: "" };
+    return `<li class="item"><div class="item-info"><strong>${esc(c.nombre)}</strong>
+      <span>${esc(c.telefono)}</span><span>${s.n} turno(s) · Última visita: ${s.ult ? fmtFecha(s.ult) : "todavía no"}</span></div>
+      <div class="item-acc"><button class="btn-mini" data-act="historial" data-id="${c.id}">Ver historial</button></div></li>`; }).join("")
+    || `<li class="vacio">No hay clientes para mostrar.</li>`;
+}
+
+async function vGaleria() {
+  const { data, error } = await sb.from("galeria").select("*").order("orden");
+  if (error) throw error;
+  return `<header class="cab"><h1>Galería</h1></header>
+    <form data-form="galeria" class="fila-form">
+      <label>Foto<input type="file" name="archivo" accept="image/*" required></label>
+      <label>Título<input name="titulo" maxlength="80" placeholder="Ej: Alisado"></label>
+      <label>Orden<input name="orden" type="number" min="0" value="${(data || []).length + 1}"></label>
+      <button type="submit">Subir foto</button>
+    </form>
+    <ul class="galeria-admin">${(data || []).map(g => `<li><img src="${esc(g.url)}" alt="${esc(g.titulo)}">
+      <span>${esc(g.titulo)} · orden ${g.orden}</span>
+      <button class="btn-mini peligro" data-act="borrarGaleria" data-id="${g.id}">Quitar</button></li>`).join("") || `<li class="vacio">Todavía no hay fotos.</li>`}</ul>`;
+}
+
+async function vConfiguracion() {
+  const { data, error } = await sb.from("config").select("*");
+  if (error) throw error;
+  const c = Object.fromEntries((data || []).map(x => [x.clave, x.valor]));
+  const campo = (k, l, tipo = "text") => `<label>${l}<input name="${k}" type="${tipo}" value="${esc(c[k] ?? "")}"></label>`;
+  return `<header class="cab"><h1>Configuración</h1></header>
+    <form data-form="config" class="campos bloque">
+      ${campo("nombre", "Nombre del salón")}
+      ${campo("direccion", "Dirección")}
+      ${campo("instagram", "Instagram (sin @)")}
+      ${campo("whatsapp", "WhatsApp del salón (549 + código de área + número)")}
+      <label>Frase de bienvenida<textarea name="texto_bienvenida" rows="2" maxlength="200">${esc(c.texto_bienvenida ?? "")}</textarea></label>
+      ${campo("margen_min", "Margen entre turnos (minutos)", "number")}
+      ${campo("paso_min", "Cada cuánto empiezan los turnos (minutos)", "number")}
+      ${campo("foto_principal", "Foto principal (dirección de la imagen)")}
+      <label>O subí la foto principal<input type="file" name="archivo_principal" accept="image/*"></label>
+      <button type="submit">Guardar configuración</button>
+    </form>`;
+}
+
+const VISTAS = { inicio: vInicio, turnos: vTurnos, servicios: vServicios, disponibilidad: vDisponibilidad, clientes: vClientes, galeria: vGaleria, configuracion: vConfiguracion };
+
+async function render() {
+  const el = $("#vista");
+  el.innerHTML = `<p class="cargando">Cargando…</p>`;
+  try { el.innerHTML = await VISTAS[S.vista](); }
+  catch (e) { el.innerHTML = `<p class="vacio">No pudimos cargar esta sección: ${esc(mensajeError(e))}</p>`; }
+}
+function irA(v) {
+  S.vista = v;
+  document.querySelectorAll("#menu button").forEach(b => b.classList.toggle("activo", b.dataset.vista === v));
+  render();
+}
+
+/* ===== Turnos: crear, cambiar estado, reprogramar, notas ===== */
+async function abrirNuevoTurno() {
+  await cargarServicios();
+  abrirModal("Nuevo turno", `<form data-form="turno" class="campos">
+    <label>Nombre del cliente<input name="nombre" maxlength="80" required></label>
+    <label>Teléfono<input name="telefono" inputmode="tel" placeholder="Con código de área" required></label>
+    <label>Servicio<select name="servicio_id" required>${S.servicios.filter(s => s.activo).map(s => `<option value="${s.id}">${esc(s.nombre)} · ${fmtDur(s.duracion_min)}</option>`).join("")}</select></label>
+    <div class="fila2"><label>Fecha<input type="date" name="fecha" value="${S.fecha}" required></label>
+    <label>Hora<input type="time" name="hora" value="10:00" required></label></div>
+    <label>Estado<select name="estado"><option value="confirmado">Confirmado</option><option value="pendiente">Pendiente</option></select></label>
+    <label>Nota privada<textarea name="observaciones" rows="2" maxlength="500"></textarea></label>
+    <button type="submit">Guardar turno</button></form>`);
+}
+async function guardarTurno(f) {
+  const d = new FormData(f);
+  const nombre = String(d.get("nombre") || "").trim(), tel = normTel(d.get("telefono"));
+  const fecha = String(d.get("fecha") || ""), hora = String(d.get("hora") || "");
+  if (nombre.length < 2) throw new Error("Escribí el nombre del cliente.");
+  if (tel.length < 8 || tel.length > 15) throw new Error("Escribí un teléfono válido, con código de área.");
+  if (!fecha || !/^\d{2}:\d{2}$/.test(hora)) throw new Error("Revisá la fecha y la hora.");
+  const srv = S.servicios.find(x => x.id === d.get("servicio_id"));
+  if (!srv) throw new Error("Elegí un servicio.");
+  const clienteId = await clienteDe(nombre, tel);
+  const { error } = await sb.from("turnos").insert({
+    cliente_id: clienteId, servicio_id: srv.id, fecha, hora,
+    duracion_min: srv.duracion_min, precio: srv.precio,
+    inicio: tsLocal(fecha, hora), bloque_fin: tsLocal(fecha, hora, srv.duracion_min + S.margen),
+    estado: String(d.get("estado") || "confirmado"), observaciones: String(d.get("observaciones") || "")
+  });
+  if (error) throw error;
+  cerrarModal(); aviso("Turno creado"); render();
+}
+async function actualizarEstado(id, estado) {
+  const { error } = await sb.from("turnos").update({ estado }).eq("id", id);
+  if (error) throw error;
+  aviso(`Turno: ${ESTADOS[estado]}`); render();
+}
+async function abrirReprogramar(id) {
+  const { data: t, error } = await sb.from("turnos").select(TURNO_SEL).eq("id", id).single();
+  if (error) throw error;
+  abrirModal("Reprogramar turno", `<form data-form="reprogramar" class="campos">
+    <input type="hidden" name="id" value="${t.id}"><input type="hidden" name="dur" value="${t.duracion_min}">
+    <p><strong>${esc(t.clientes?.nombre || "")}</strong> · ${esc(t.servicios?.nombre || "")}</p>
+    <div class="fila2"><label>Nueva fecha<input type="date" name="fecha" value="${t.fecha}" required></label>
+    <label>Nueva hora<input type="time" name="hora" value="${hhmm(t.hora)}" required></label></div>
+    <p class="muted">Si el horario choca con otro turno, la base de datos no lo permite y te avisa.</p>
+    <button type="submit">Guardar cambio</button></form>`);
+}
+async function guardarReprogramar(f) {
+  const d = new FormData(f);
+  const fecha = String(d.get("fecha") || ""), hora = String(d.get("hora") || "");
+  if (!fecha || !hora) throw new Error("Revisá la fecha y la hora.");
+  const dur = Number(d.get("dur")) + S.margen;
+  const { error } = await sb.from("turnos").update({
+    fecha, hora, inicio: tsLocal(fecha, hora), bloque_fin: tsLocal(fecha, hora, dur)
+  }).eq("id", d.get("id"));
+  if (error) throw error;
+  cerrarModal(); aviso("Turno reprogramado"); render();
+}
+async function abrirNota(id) {
+  const { data: t, error } = await sb.from("turnos").select("id,observaciones,clientes(nombre)").eq("id", id).single();
+  if (error) throw error;
+  abrirModal("Nota privada", `<form data-form="nota" class="campos">
+    <input type="hidden" name="id" value="${t.id}">
+    <p><strong>${esc(t.clientes?.nombre || "")}</strong></p>
+    <label>Nota (solo la ves vos)<textarea name="observaciones" rows="4" maxlength="500">${esc(t.observaciones || "")}</textarea></label>
+    <button type="submit">Guardar nota</button></form>`);
+}
+async function guardarNota(f) {
+  const d = new FormData(f);
+  const { error } = await sb.from("turnos").update({ observaciones: String(d.get("observaciones") || "") }).eq("id", d.get("id"));
+  if (error) throw error;
+  cerrarModal(); aviso("Nota guardada"); render();
+}
+
+/* ===== Servicios ===== */
+function abrirServicio(id) {
+  const s = S.servicios.find(x => x.id === id) || { categoria: "", nombre: "", descripcion: "", precio: 0, duracion_min: 60, foto_url: "", orden: 0, activo: true };
+  const cats = [...new Set(S.servicios.map(x => x.categoria))].filter(Boolean);
+  abrirModal(id ? "Editar servicio" : "Nuevo servicio", `<form data-form="servicio" class="campos">
+    <input type="hidden" name="id" value="${id || ""}">
+    <label>Categoría<input name="categoria" list="cats" value="${esc(s.categoria)}" required></label>
+    <datalist id="cats">${cats.map(c => `<option value="${esc(c)}">`).join("")}</datalist>
+    <label>Nombre<input name="nombre" value="${esc(s.nombre)}" maxlength="80" required></label>
+    <label>Descripción<textarea name="descripcion" rows="3" maxlength="400">${esc(s.descripcion)}</textarea></label>
+    <div class="fila2">
+      <label>Precio ($)<input name="precio" type="number" min="0" step="1" value="${Number(s.precio)}" required></label>
+      <label>Duración (minutos)<input name="duracion_min" type="number" min="5" max="480" step="5" value="${s.duracion_min}" required></label>
+    </div>
+    <label>Foto (dirección de la imagen)<input name="foto_url" value="${esc(s.foto_url)}"></label>
+    <label>O subí una foto<input type="file" name="archivo" accept="image/*"></label>
+    <div class="fila2">
+      <label>Orden<input name="orden" type="number" min="0" value="${s.orden}"></label>
+      <label class="check"><input name="activo" type="checkbox" ${s.activo ? "checked" : ""}> Visible en la web</label>
+    </div>
+    <button type="submit">Guardar servicio</button></form>`);
+}
+async function guardarServicio(f) {
+  const d = new FormData(f);
+  const nombre = String(d.get("nombre") || "").trim();
+  const dur = Number(d.get("duracion_min")), precio = Number(d.get("precio"));
+  if (!nombre) throw new Error("Escribí el nombre del servicio.");
+  if (!(dur >= 5 && dur <= 480)) throw new Error("La duración tiene que estar entre 5 y 480 minutos.");
+  if (!(precio >= 0)) throw new Error("El precio no puede ser negativo.");
+  let foto = String(d.get("foto_url") || "").trim();
+  const archivo = d.get("archivo");
+  if (archivo && archivo.size > 0) foto = await subirFoto(archivo);
+  const datos = {
+    categoria: String(d.get("categoria") || "General").trim() || "General", nombre,
+    descripcion: String(d.get("descripcion") || "").trim(), precio, duracion_min: dur,
+    foto_url: foto, orden: Number(d.get("orden") || 0), activo: d.get("activo") === "on"
+  };
+  const id = String(d.get("id") || "");
+  const { error } = id ? await sb.from("servicios").update(datos).eq("id", id) : await sb.from("servicios").insert(datos);
+  if (error) throw error;
+  cerrarModal(); aviso("Servicio guardado"); render();
+}
+async function alternarServicio(id, activo) {
+  const { error } = await sb.from("servicios").update({ activo }).eq("id", id);
+  if (error) throw error;
+  aviso(activo ? "Servicio visible en la web" : "Servicio oculto en la web"); render();
+}
+async function borrarServicio(id) {
+  const { count, error } = await sb.from("turnos").select("id", { count: "exact", head: true }).eq("servicio_id", id);
+  if (error) throw error;
+  if (count > 0) return aviso("Este servicio tiene turnos registrados. Ocultalo en lugar de borrarlo.", "error");
+  if (!confirm("¿Eliminar este servicio? No se puede deshacer.")) return;
+  const { error: e2 } = await sb.from("servicios").delete().eq("id", id);
+  if (e2) throw e2;
+  aviso("Servicio eliminado"); render();
+}
+
+/* ===== Disponibilidad ===== */
+async function guardarHorarios(f) {
+  const d = new FormData(f), filas = [];
+  for (const dia of ORDEN) {
+    const trabaja = d.get(`trabaja-${dia}`) === "on";
+    const abre = d.get(`abre-${dia}`) || null, cierra = d.get(`cierra-${dia}`) || null;
+    const pd = d.get(`pdesde-${dia}`) || null, ph = d.get(`phasta-${dia}`) || null;
+    if (trabaja) {
+      if (!abre || !cierra || abre >= cierra) throw new Error(`${DIAS[dia]}: revisá la hora de apertura y de cierre.`);
+      if ((pd && !ph) || (!pd && ph)) throw new Error(`${DIAS[dia]}: la pausa necesita hora de inicio y de fin.`);
+      if (pd && (pd >= ph || pd < abre || ph > cierra)) throw new Error(`${DIAS[dia]}: la pausa tiene que estar dentro del horario.`);
+    }
+    filas.push({ dia, trabaja, abre: trabaja ? abre : null, cierra: trabaja ? cierra : null,
+      descanso_desde: trabaja ? pd : null, descanso_hasta: trabaja ? ph : null });
+  }
+  const { error } = await sb.from("horarios_semana").upsert(filas, { onConflict: "dia" });
+  if (error) throw error;
+  aviso("Horario guardado"); render();
+}
+async function guardarExcepcion(f) {
+  const d = new FormData(f), cerrado = d.get("cerrado") === "1", fecha = String(d.get("fecha") || "");
+  if (!fecha) throw new Error("Elegí la fecha.");
+  if (!cerrado && (!d.get("abre") || !d.get("cierra") || d.get("abre") >= d.get("cierra"))) throw new Error("Para un horario especial, revisá la apertura y el cierre.");
+  const { error } = await sb.from("excepciones").upsert({
+    fecha, cerrado, abre: cerrado ? null : d.get("abre"), cierra: cerrado ? null : d.get("cierra"),
+    motivo: String(d.get("motivo") || "")
+  }, { onConflict: "fecha" });
+  if (error) throw error;
+  aviso("Día especial guardado"); render();
+}
+async function guardarBloqueo(f) {
+  const d = new FormData(f), desde = d.get("desde"), hasta = d.get("hasta");
+  if (!d.get("fecha") || !desde || !hasta || desde >= hasta) throw new Error("Revisá la fecha y las horas del bloqueo.");
+  const { error } = await sb.from("bloqueos").insert({ fecha: d.get("fecha"), desde, hasta, motivo: String(d.get("motivo") || "") });
+  if (error) throw error;
+  aviso("Bloqueo guardado"); render();
+}
+async function borrar(tabla, col, valor, msg) {
+  if (!confirm(msg)) return;
+  const { error } = await sb.from(tabla).delete().eq(col, valor);
+  if (error) throw error;
+  aviso("Eliminado"); render();
+}
+
+/* ===== Clientes ===== */
+async function abrirHistorial(id) {
+  const c = S.clientes.find(x => x.id === id);
+  const { data, error } = await sb.from("turnos").select("fecha,hora,estado,precio,servicios(nombre)").eq("cliente_id", id).order("fecha", { ascending: false });
+  if (error) throw error;
+  abrirModal(`Historial de ${c ? c.nombre : ""}`, data && data.length
+    ? `<ul class="lista-simple">${data.map(t => `<li><strong>${fmtFecha(t.fecha)} · ${hhmm(t.hora)}</strong>
+        <span>${esc(t.servicios?.nombre || "")}</span> ${chip(t.estado)} <span>${fmtPrecio(t.precio)}</span></li>`).join("")}</ul>`
+    : `<p class="vacio">Todavía no tiene turnos.</p>`);
+}
+
+/* ===== Galería y configuración ===== */
+async function guardarGaleria(f) {
+  const d = new FormData(f), archivo = d.get("archivo");
+  if (!archivo || !archivo.size) throw new Error("Elegí una foto.");
+  const url = await subirFoto(archivo);
+  const { error } = await sb.from("galeria").insert({ url, titulo: String(d.get("titulo") || ""), orden: Number(d.get("orden") || 0) });
+  if (error) throw error;
+  aviso("Foto subida"); render();
+}
+async function guardarConfig(f) {
+  const d = new FormData(f);
+  const margen = Number(d.get("margen_min")), paso = Number(d.get("paso_min"));
+  if (!(margen >= 0 && margen <= 120)) throw new Error("El margen entre turnos tiene que estar entre 0 y 120 minutos.");
+  if (!(paso >= 5 && paso <= 120)) throw new Error("Cada cuánto empiezan los turnos: entre 5 y 120 minutos.");
+  let foto = String(d.get("foto_principal") || "").trim();
+  const arch = d.get("archivo_principal");
+  if (arch && arch.size) foto = await subirFoto(arch);
+  const filas = [
+    { clave: "nombre", valor: String(d.get("nombre") || "").trim() },
+    { clave: "direccion", valor: String(d.get("direccion") || "").trim() },
+    { clave: "instagram", valor: String(d.get("instagram") || "").trim().replace(/^@/, "") },
+    { clave: "whatsapp", valor: normTel(d.get("whatsapp")) },
+    { clave: "texto_bienvenida", valor: String(d.get("texto_bienvenida") || "").trim() },
+    { clave: "margen_min", valor: String(margen) },
+    { clave: "paso_min", valor: String(paso) },
+    { clave: "foto_principal", valor: foto }
+  ];
+  const { error } = await sb.from("config").upsert(filas, { onConflict: "clave" });
+  if (error) throw error;
+  S.margen = margen; S.paso = paso;
+  aviso("Configuración guardada"); render();
+}
+
+/* ===== Acciones de botones ===== */
+const ACCIONES = {
+  salir: async () => { await sb.auth.signOut(); location.reload(); },
+  estado: d => actualizarEstado(d.id, d.estado),
+  reprogramar: d => abrirReprogramar(d.id),
+  nota: d => abrirNota(d.id),
+  nuevo: () => abrirNuevoTurno(),
+  hoy: () => { S.fecha = hoyISO(); render(); },
+  dia: d => { S.fecha = sumar(S.fecha, Number(d.n)); render(); },
+  nuevoServicio: () => abrirServicio(""),
+  editarServicio: d => abrirServicio(d.id),
+  toggleServicio: d => alternarServicio(d.id, d.activo === "1"),
+  borrarServicio: d => borrarServicio(d.id),
+  borrarExcepcion: d => borrar("excepciones", "fecha", d.id, "¿Quitar este día especial?"),
+  borrarBloqueo: d => borrar("bloqueos", "id", d.id, "¿Quitar este bloqueo?"),
+  borrarGaleria: d => borrar("galeria", "id", d.id, "¿Quitar esta foto de la galería?"),
+  historial: d => abrirHistorial(d.id)
+};
+const FORMULARIOS = {
+  turno: guardarTurno, reprogramar: guardarReprogramar, nota: guardarNota, servicio: guardarServicio,
+  horarios: guardarHorarios, excepcion: guardarExcepcion, bloqueo: guardarBloqueo,
+  galeria: guardarGaleria, config: guardarConfig
+};
+
+/* ===== Eventos ===== */
+document.addEventListener("click", async e => {
+  const t = e.target;
+  const c = s => (t && t.closest) ? t.closest(s) : null;
+  if (c("[data-cerrar]")) return cerrarModal();
+  const v = c("[data-vista]"); if (v) return irA(v.dataset.vista);
+  const b = c("[data-act]"); if (!b) return;
+  try { await ACCIONES[b.dataset.act](b.dataset, b); }
+  catch (err) { aviso(mensajeError(err), "error"); }
+});
+document.addEventListener("submit", async e => {
+  const f = e.target;
+  if (f.id === "formLogin") {
+    e.preventDefault(); ocupado(f, true);
+    try { await iniciarSesion(f); } catch (err) { $("#errLogin").textContent = mensajeError(err); }
+    ocupado(f, false); return;
+  }
+  const fn = FORMULARIOS[f.dataset.form];
+  if (!fn) return;
+  e.preventDefault(); ocupado(f, true);
+  try { await fn(f); } catch (err) { aviso(mensajeError(err), "error"); }
+  ocupado(f, false);
+});
+document.addEventListener("input", e => {
+  if (e.target.id === "buscarTurnos") { S.buscar = e.target.value; const l = $("#listaTurnos"); if (l) l.innerHTML = listaTurnos(); }
+  if (e.target.id === "buscarClientes") { S.buscarCli = e.target.value; const l = $("#listaClientes"); if (l) l.innerHTML = listaClientes(); }
+});
+document.addEventListener("change", e => {
+  if (e.target.id === "fechaTurnos") { S.fecha = e.target.value || hoyISO(); render(); }
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarModal(); });
+
+/* ===== Arranque ===== */
+async function arrancar() {
+  if (!sb) {
+    document.body.innerHTML = `<p style="padding:40px;font-family:sans-serif">Falta conectar el panel con la base de datos. Seguí la parte de la guía sobre el panel de administración.</p>`;
+    return;
+  }
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) await entrar(); else mostrarLogin();
+}
+arrancar();
+})();
+</script>
+</body>
+</html>
